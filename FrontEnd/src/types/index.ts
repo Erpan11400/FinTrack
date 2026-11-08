@@ -17,8 +17,9 @@ export interface Category {
   id: string
   type: CategoryType
   name: string
-  subs: string[]
+  subs?: string[]
   color: string
+  active: boolean
 }
 
 export interface Transaction {
@@ -32,12 +33,13 @@ export interface Transaction {
   categoryId?: string | null
   subCategory?: string | null
   description: string
-  tags: string
+  tags?: string
 }
 
 export interface Preset {
   id: string
-  label: string
+  name: string
+  label?: string
   amount: number
   accountId: string
   toAccountId?: string
@@ -45,6 +47,7 @@ export interface Preset {
   subCategory?: string
   type: TxType
   fee?: number
+  description: string
   icon?: string
 }
 

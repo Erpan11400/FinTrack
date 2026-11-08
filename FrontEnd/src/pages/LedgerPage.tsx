@@ -37,7 +37,7 @@ export default function LedgerPage() {
     allRows.push({ t, amountIn, amountOut, balance: running })
   }
   const rows = allRows.filter(
-    ({ t }) => !q || t.description.toLowerCase().includes(q) || (t.tags || '').toLowerCase().includes(q),
+    ({ t }) => !q || t.description.toLowerCase().includes(q),
   )
 
   return (
@@ -86,7 +86,7 @@ export default function LedgerPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari deskripsi atau tag..."
+              placeholder="Cari deskripsi..."
               className="w-full rounded-xl border border-slate-800 bg-slate-950 py-1.5 pl-8 pr-3 text-xs text-white placeholder-slate-500 focus:border-brand-500 focus:outline-none"
             />
           </div>
@@ -98,7 +98,7 @@ export default function LedgerPage() {
             <thead className="border-b border-slate-800 bg-slate-900 text-xs font-semibold uppercase tracking-wider text-slate-400">
               <tr>
                 <th className="px-4 py-3">Tanggal</th>
-                <th className="px-4 py-3">Deskripsi & Tag</th>
+                <th className="px-4 py-3">Deskripsi</th>
                 <th className="px-4 py-3">Kategori</th>
                 <th className="px-4 py-3 text-right">Masuk (In)</th>
                 <th className="px-4 py-3 text-right">Keluar (Out)</th>
@@ -110,9 +110,8 @@ export default function LedgerPage() {
               {rows.map(({ t, amountIn, amountOut, balance }) => (
                 <tr key={t.id} className="transition hover:bg-slate-900/40">
                   <td className="px-4 py-3 font-mono text-slate-400">{t.date}</td>
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-slate-200">{t.description}</div>
-                    <div className="mt-0.5 font-mono text-xs text-brand-400">{t.tags || ''}</div>
+                  <td className="px-4 py-3 font-medium text-slate-200">
+                    {t.description}
                   </td>
                   <td className="px-4 py-3 text-slate-400">
                     {t.type === 'transfer' ? 'Transfer Internal' : (categories.find((c) => c.id === t.categoryId)?.name ?? '-')}

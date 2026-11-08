@@ -11,7 +11,10 @@ export function loadFinanceData(): FinanceData {
     const parsed = JSON.parse(saved) as Partial<FinanceData>
     return {
       accounts: parsed.accounts ?? defaults.accounts,
-      categories: parsed.categories ?? defaults.categories,
+      categories: (parsed.categories ?? defaults.categories).map((c) => ({
+        ...c,
+        active: c.active !== false,
+      })),
       presets: parsed.presets ?? defaults.presets,
       transactions: parsed.transactions ?? defaults.transactions,
     }

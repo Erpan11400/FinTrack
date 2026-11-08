@@ -38,14 +38,15 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
               ...d.presets,
               {
                 id: uid('p'),
+                name: newTx.description,
                 label: newTx.description,
                 amount: newTx.amount,
                 accountId: newTx.accountId,
                 toAccountId: newTx.toAccountId ?? undefined,
                 categoryId: newTx.categoryId ?? undefined,
-                subCategory: newTx.subCategory ?? undefined,
                 fee: newTx.fee,
                 type: newTx.type,
+                description: newTx.description,
                 icon: 'star',
               },
             ]
@@ -93,19 +94,71 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         toAccountId: p.toAccountId ?? null,
         fee: p.fee || 0,
         categoryId: p.type === 'transfer' ? null : (p.categoryId ?? null),
-        subCategory: p.subCategory ?? '',
-        description: `[Quick Preset] ${p.label}`,
-        tags: '#Preset',
+        description: p.description || p.name || p.label || '[Quick Preset]',
       }
       setData((d) => ({ ...d, transactions: [newTx, ...d.transactions] }))
-      toast(`Preset "${p.label}" Berhasil Dieksekusi!`, 'success')
+      toast(`Preset "${p.name || p.label}" Berhasil Dieksekusi!`, 'success')
+    },
+    [toast],
+  )
+
+  const addPreset = useCallback<FinanceContextValue['addPreset']>(
+    (preset) => {
+      setData((d) => ({
+        ...d,
+        presets: [
+          ...d.presets,
+          {
+            ...preset,
+            id: uid('p'),
+            name: preset.name || preset.label || '',
+            label: preset.label || preset.name || '',
+            icon: preset.icon || 'zap',
+          },
+        ],
+      }))
+      toast('Preset Transaksi Berhasil Ditambahkan', 'success')
+    },
+    [toast],
+  )
+
+  const updatePreset = useCallback<FinanceContextValue['updatePreset']>(
+    (preset) => {
+      setData((d) => ({
+        ...d,
+        presets: d.presets.map((p) =>
+          p.id === preset.id
+            ? {
+                ...preset,
+                name: preset.name || preset.label || '',
+                label: preset.label || preset.name || '',
+                icon: preset.icon || p.icon || 'zap',
+              }
+            : p
+        ),
+      }))
+      toast('Preset Transaksi Berhasil Diperbarui', 'success')
+    },
+    [toast],
+  )
+
+  const deletePreset = useCallback<FinanceContextValue['deletePreset']>(
+    (id) => {
+      setData((d) => ({
+        ...d,
+        presets: d.presets.filter((p) => p.id !== id),
+      }))
+      toast('Preset Transaksi Berhasil Dihapus', 'info')
     },
     [toast],
   )
 
   const addCategory = useCallback<FinanceContextValue['addCategory']>(
     (c) => {
-      setData((d) => ({ ...d, categories: [...d.categories, { ...c, id: uid('cat'), color: c.color || randomColor() }] }))
+      setData((d) => ({
+        ...d,
+        categories: [...d.categories, { ...c, id: uid('cat'), color: c.color || randomColor(), active: c.active !== false }],
+      }))
       toast('Kategori Master Berhasil Ditambahkan', 'success')
     },
     [toast],
@@ -168,6 +221,9 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     updateTransaction,
     deleteTransaction,
     runPreset,
+    addPreset,
+    updatePreset,
+    deletePreset,
     addCategory,
     updateCategory,
     addAccount,

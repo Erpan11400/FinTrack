@@ -4,6 +4,7 @@ import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
 import { Field, Input } from '../ui/Input'
 import { Select } from '../ui/Select'
+import { Checkbox } from '../ui/Checkbox'
 import { useFinance } from '../../hooks/useFinance'
 import type { Category, CategoryType } from '../../types'
 
@@ -18,27 +19,26 @@ function CategoryForm({ category, onClose }: { category?: Category | null; onClo
   const isEdit = !!category
   const [type, setType] = useState<CategoryType>(category?.type ?? 'pengeluaran')
   const [name, setName] = useState(category?.name ?? '')
-  const [subs, setSubs] = useState(category?.subs ? category.subs.join(', ') : '')
+  const [active, setActive] = useState(category ? category.active !== false : true)
 
   return (
     <form
       className="space-y-3 text-xs"
       onSubmit={(e) => {
         e.preventDefault()
-        const subsArray = subs.split(',').map((s) => s.trim()).filter(Boolean)
         if (isEdit && category) {
           updateCategory({
             ...category,
             type,
             name,
-            subs: subsArray,
+            active,
           })
         } else {
           addCategory({
             type,
             name,
-            subs: subsArray,
             color: '',
+            active,
           })
         }
         onClose()
@@ -54,12 +54,15 @@ function CategoryForm({ category, onClose }: { category?: Category | null; onClo
           ]}
         />
       </Field>
-      <Field label="Nama Kategori Utama" htmlFor="cat-name">
+      <Field label="Nama Kategori" htmlFor="cat-name">
         <Input id="cat-name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Misal: Tagihan & Utilities" />
       </Field>
-      <Field label="Sub-Kategori (Pisahkan dengan koma)" htmlFor="cat-subs">
-        <Input id="cat-subs" value={subs} onChange={(e) => setSubs(e.target.value)} placeholder="Listrik, Air, Internet" />
-      </Field>
+      <Checkbox
+        id="cat-active"
+        checked={active}
+        onCheckedChange={setActive}
+        label="Kategori Aktif (Dapat dipilih dalam pencatatan transaksi)"
+      />
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="secondary" size="sm" onClick={onClose}>Batal</Button>
         <Button type="submit" size="sm" className="px-4">

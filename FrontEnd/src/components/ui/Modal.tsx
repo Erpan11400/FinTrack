@@ -17,15 +17,15 @@ export function Modal({ open, onOpenChange, title, description, children, classN
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm" />
-        <div className="pointer-events-none fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4">
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center">
           <RadixDialog.Content
             aria-describedby={description ? undefined : undefined}
             className={cn(
-              'glass-panel pointer-events-auto my-8 w-full max-w-md space-y-4 rounded-2xl p-6 shadow-2xl focus:outline-none',
+              'glass-panel pointer-events-auto my-auto w-full max-w-md space-y-4 rounded-2xl p-6 shadow-2xl focus:outline-none',
               className,
             )}
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex shrink-0 items-center justify-between border-b border-slate-800 pb-3">
               <RadixDialog.Title className="flex items-center gap-2 text-base font-bold text-white">
                 {title}
               </RadixDialog.Title>

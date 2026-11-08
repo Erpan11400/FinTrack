@@ -49,18 +49,15 @@ function TransactionForm({
   )
   const [fee, setFee] = useState(transaction?.fee ? String(transaction.fee) : '')
   const [mainCat, setMainCat] = useState(transaction?.categoryId ?? '')
-  const [subCat, setSubCat] = useState(transaction?.subCategory ?? '')
   const [date, setDate] = useState(transaction?.date ?? todayStr())
   const [desc, setDesc] = useState(transaction?.description ?? '')
-  const [tags, setTags] = useState(transaction?.tags ?? '')
   const [savePreset, setSavePreset] = useState(false)
 
-  const accountOptions = accounts.map((a) => ({ value: a.id, label: `${a.name} (${a.type})` }))
-  const catList = categories.filter((c) => c.type === type)
+  const accountOptions = accounts
+    .filter((a) => a.active || a.id === transaction?.accountId || a.id === transaction?.toAccountId)
+    .map((a) => ({ value: a.id, label: `${a.name} (${a.type})` }))
+  const catList = categories.filter((c) => c.type === type && (c.active !== false || c.id === transaction?.categoryId))
   const activeCat = catList.find((c) => c.id === mainCat) ?? catList[0]
-  const subOptions = (activeCat?.subs ?? []).filter(Boolean)
-  const allSubOptions = subCat && !subOptions.includes(subCat) ? [subCat, ...subOptions] : subOptions
-  const activeSub = allSubOptions.includes(subCat) ? subCat : (allSubOptions[0] ?? '')
 
   const result = nominal.trim() ? evaluateMathExpression(nominal) : null
 
@@ -84,9 +81,7 @@ function TransactionForm({
       toAccountId: isTransfer ? toId : null,
       fee: isTransfer ? parseInt(fee) || 0 : 0,
       categoryId: isTransfer ? null : (activeCat?.id ?? null),
-      subCategory: isTransfer ? null : (activeSub || null),
       description: desc,
-      tags: tags || '#Manual',
     }
 
     if (isEdit && transaction) {
@@ -112,7 +107,6 @@ function TransactionForm({
                 setType(t.value)
                 if (t.value !== type) {
                   setMainCat('')
-                  setSubCat('')
                 }
               }}
               className={cn(
@@ -139,10 +133,6 @@ function TransactionForm({
           value={nominal}
           placeholder="Contoh: (50000 * 2) + 15000"
           onChange={(e) => setNominal(e.target.value)}
-          onBlur={() => {
-            const r = evaluateMathExpression(nominal)
-            if (r.valid) setNominal(String(r.value))
-          }}
           className={cn(
             'font-mono text-sm',
             result && (result.valid ? 'border-emerald-500' : 'border-rose-500'),
@@ -182,27 +172,16 @@ function TransactionForm({
           <Field label="Akun Storage">
             <Select value={accountId} onValueChange={setAccountId} options={accountOptions} />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Kategori Utama">
-              <Select
-                value={activeCat?.id ?? ''}
-                onValueChange={(v) => {
-                  setMainCat(v)
-                  setSubCat('')
-                }}
-                options={catList.map((c) => ({ value: c.id, label: c.name }))}
-                placeholder="Pilih kategori"
-              />
-            </Field>
-            <Field label="Sub-Kategori">
-              <Select
-                value={activeSub}
-                onValueChange={setSubCat}
-                options={allSubOptions.map((s) => ({ value: s, label: s }))}
-                placeholder="Umum"
-              />
-            </Field>
-          </div>
+          <Field label="Kategori">
+            <Select
+              value={activeCat?.id ?? ''}
+              onValueChange={(v) => {
+                setMainCat(v)
+              }}
+              options={catList.map((c) => ({ value: c.id, label: c.name }))}
+              placeholder="Pilih kategori"
+            />
+          </Field>
         </>
       ) : (
         <div className="grid grid-cols-2 gap-3">
@@ -242,10 +221,6 @@ function TransactionForm({
           />
         </Field>
       </div>
-
-      <Field label="Tagging Kustom (Gunakan pemisah koma atau hashtag)" htmlFor="tx-tags">
-        <Input id="tx-tags" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="#Liburan, #Rutin, #Kerja" />
-      </Field>
 
       {!isEdit && (
         <Checkbox

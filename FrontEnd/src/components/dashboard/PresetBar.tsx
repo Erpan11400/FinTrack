@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Zap } from 'lucide-react'
 import { useFinance } from '../../hooks/useFinance'
 import { getIcon } from '../../lib/icons'
@@ -12,7 +13,9 @@ export function PresetBar() {
           <Zap className="size-4 text-amber-400" />
           <h3 className="text-base font-bold text-slate-100">Preset Transaksi Cepat (1-2 Klik)</h3>
         </div>
-        <span className="text-xs text-slate-400">Klik shortcut untuk pencatatan instan</span>
+        <Link to="/master" className="text-xs text-slate-400 hover:text-brand-300 transition">
+          Kelola Preset &rarr;
+        </Link>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         {presets.map((p) => {
@@ -22,18 +25,26 @@ export function PresetBar() {
               key={p.id}
               type="button"
               onClick={() => runPreset(p)}
-              className="group flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-slate-200 transition hover:border-brand-500 hover:bg-brand-600/20"
+              className="group flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-slate-200 transition hover:border-brand-500 hover:bg-brand-600/20"
             >
-              <div className="flex size-6 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400 transition group-hover:scale-110">
+              <div className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400 transition group-hover:scale-110">
                 <Icon className="size-3.5" />
               </div>
               <div className="text-left">
-                <div className="font-semibold leading-tight text-slate-200">{p.label}</div>
-                <div className="font-mono text-xs text-slate-400">{formatRp(p.amount)}</div>
+                <div className="font-semibold leading-tight text-slate-200 group-hover:text-white">{p.name || p.label}</div>
+                <div className="font-mono text-xs text-brand-400">{formatRp(p.amount)}</div>
               </div>
             </button>
           )
         })}
+        {presets.length === 0 && (
+          <p className="text-xs text-slate-500">
+            Belum ada preset transaksi.{' '}
+            <Link to="/master" className="text-brand-400 underline hover:text-brand-300">
+              Buat preset di Master Data
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   )

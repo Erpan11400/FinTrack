@@ -8,6 +8,9 @@ export interface FinanceContextValue extends FinanceData {
   updateTransaction: (tx: Transaction) => void
   deleteTransaction: (id: string) => void
   runPreset: (preset: Preset) => void
+  addPreset: (preset: Omit<Preset, 'id'>) => void
+  updatePreset: (preset: Preset) => void
+  deletePreset: (id: string) => void
   addCategory: (c: Omit<Category, 'id'>) => void
   updateCategory: (c: Category) => void
   addAccount: (a: Omit<Account, 'id'>) => void

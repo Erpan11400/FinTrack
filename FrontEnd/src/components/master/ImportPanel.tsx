@@ -22,8 +22,8 @@ export function ImportPanel() {
   function runImport() {
     const date = todayStr()
     addTransactions([
-      { date, type: 'pengeluaran', amount: 85000, accountId: target, categoryId: 'cat-1', subCategory: 'Restoran & Cafe', description: '[Import CSV] Restoran Senayan', tags: '#ImportCSV' },
-      { date, type: 'pengeluaran', amount: 45000, accountId: target, categoryId: 'cat-2', subCategory: 'Bensin', description: '[Import CSV] SPBU Pertamina', tags: '#ImportCSV' },
+      { date, type: 'pengeluaran', amount: 85000, accountId: target, categoryId: 'cat-1', description: '[Import CSV] Restoran Senayan' },
+      { date, type: 'pengeluaran', amount: 45000, accountId: target, categoryId: 'cat-2', description: '[Import CSV] SPBU Pertamina' },
     ])
     setMapping(false)
     toast('2 Transaksi dari CSV Berhasil Di-import!', 'success')
