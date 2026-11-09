@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { BookOpen, ChartLine, ChartPie, Plus, SlidersHorizontal, type LucideIcon } from 'lucide-react'
+import { BookOpen, ChartLine, ChartPie, Lock, Plus, SlidersHorizontal, type LucideIcon } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { TransactionModal } from '../transaction/TransactionModal'
+import { useAuth } from '../../hooks/useAuth'
+import { useToast } from '../../hooks/useToast'
 import { cn } from '../../lib/utils'
 
 const NAV: { to: string; label: string; mobile: string; icon: LucideIcon }[] = [
@@ -14,6 +16,13 @@ const NAV: { to: string; label: string; mobile: string; icon: LucideIcon }[] = [
 
 export function AppLayout() {
   const [txOpen, setTxOpen] = useState(false)
+  const { logout } = useAuth()
+  const { toast } = useToast()
+
+  function handleLock() {
+    logout()
+    toast('Aplikasi dikunci.', 'info')
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -22,7 +31,7 @@ export function AppLayout() {
           <div className="flex items-center gap-3">
             <img src="/logo.svg" alt="logo" className='w-8' />
             <div>
-              <span className="hidden text-base font-bold tracking-tight text-slate-100 sm:inline">Dompet Ervan</span>
+              <span className="text-base font-bold tracking-tight text-slate-100">Dompet Ervan</span>
               <span className="ml-1.5 hidden rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs text-slate-400 md:inline">
                 Personal Edition
               </span>
@@ -47,10 +56,21 @@ export function AppLayout() {
             ))}
           </nav>
 
-          <Button onClick={() => setTxOpen(true)} className="px-3 sm:px-4">
-            <Plus className="size-4" />
-            <span className="hidden sm:inline">Tambah Transaksi</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => setTxOpen(true)} className="px-3 sm:px-4">
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">Tambah Transaksi</span>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleLock}
+              className="px-2.5 sm:px-3 text-slate-400 hover:text-rose-400 hover:border-rose-900/50"
+              title="Kunci Akses"
+            >
+              <Lock className="size-4" />
+              <span className="hidden sm:inline">Kunci</span>
+            </Button>
+          </div>
         </div>
 
         <div className="flex items-center justify-around border-t border-slate-800 bg-slate-950 px-2 py-2 text-xs md:hidden">

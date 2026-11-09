@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Database, Download, FileSpreadsheet, Landmark, Pencil, Plus, RotateCcw, Tags, Trash2, Zap } from 'lucide-react'
+import { Database, Download, FileSpreadsheet, Landmark, Pencil, Plus, RotateCcw, ShieldCheck, Tags, Trash2, Zap } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs'
 import { AccountModal } from '../components/master/AccountModal'
 import { CategoryModal } from '../components/master/CategoryModal'
 import { PresetModal } from '../components/master/PresetModal'
 import { ImportPanel } from '../components/master/ImportPanel'
+import { SecuritySettings } from '../components/master/SecuritySettings'
 import { useFinance } from '../hooks/useFinance'
 import { getIcon } from '../lib/icons'
 import { cn, formatRp } from '../lib/utils'
@@ -21,14 +22,15 @@ export default function MasterPage() {
   const [editingPreset, setEditingPreset] = useState<Preset | null>(null)
 
   return (
-    <Tabs defaultValue="categories" className="space-y-6">
+    <Tabs defaultValue="accounts" className="space-y-6">
       <div className="glass-panel rounded-2xl p-5">
         <h2 className="text-xl font-bold text-white">Pengaturan System & Master Data</h2>
-        <p className="mt-0.5 text-xs text-slate-400">Kelola kategori, akun penyimpanan, preset transaksi, serta import/export data</p>
+        <p className="mt-0.5 text-xs text-slate-400">Kelola kategori, akun penyimpanan, preset transaksi, keamanan kunci, serta import/export data</p>
         <TabsList>
-          <TabsTrigger value="categories"><Tags className="size-3.5" /> Master Kategori</TabsTrigger>
           <TabsTrigger value="accounts"><Landmark className="size-3.5" /> Master Akun</TabsTrigger>
+          <TabsTrigger value="categories"><Tags className="size-3.5" /> Master Kategori</TabsTrigger>
           <TabsTrigger value="presets"><Zap className="size-3.5" /> Master Preset</TabsTrigger>
+          <TabsTrigger value="security"><ShieldCheck className="size-3.5" /> Keamanan & Kunci</TabsTrigger>
           <TabsTrigger value="import"><FileSpreadsheet className="size-3.5" /> Import CSV/Excel</TabsTrigger>
           <TabsTrigger value="backup"><Database className="size-3.5" /> Backup & Reset</TabsTrigger>
         </TabsList>
@@ -259,6 +261,10 @@ export default function MasterPage() {
             </div>
           )}
         </div>
+      </TabsContent>
+
+      <TabsContent value="security">
+        <SecuritySettings />
       </TabsContent>
 
       <TabsContent value="import">
