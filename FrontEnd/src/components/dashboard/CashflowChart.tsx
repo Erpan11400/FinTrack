@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import '../../lib/chart'
 import { axisStyle } from '../../lib/chart'
+import { Button } from '../ui/Button'
 import { useFinance } from '../../hooks/useFinance'
 import { buildCashflowSeries } from '../../lib/finance'
 import { cn } from '../../lib/utils'
@@ -29,17 +30,18 @@ export function CashflowChart() {
         </div>
         <div className="inline-flex rounded-xl border border-slate-800 bg-slate-900 p-1 text-xs">
           {PERIODS.map((p) => (
-            <button
+            <Button
               key={p.value}
-              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => setPeriod(p.value)}
               className={cn(
-                'rounded-lg px-2.5 py-1 font-medium transition',
-                period === p.value ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white',
+                'rounded-lg px-2.5 py-1 font-medium',
+                period === p.value ? 'bg-brand-600 text-white hover:text-white' : 'text-slate-400 hover:text-white',
               )}
             >
               {p.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

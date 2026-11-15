@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Zap } from 'lucide-react'
+import { Button } from '../ui/Button'
 import { useFinance } from '../../hooks/useFinance'
 import { getIcon } from '../../lib/icons'
 import { formatRp } from '../../lib/utils'
@@ -21,11 +22,12 @@ export function PresetBar() {
         {presets.map((p) => {
           const Icon = getIcon(p.icon)
           return (
-            <button
+            <Button
               key={p.id}
-              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => runPreset(p)}
-              className="group flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-slate-200 transition hover:border-brand-500 hover:bg-brand-600/20"
+              className="group gap-2.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-slate-200 hover:border-brand-500 hover:bg-brand-600/20"
             >
               <div className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400 transition group-hover:scale-110">
                 <Icon className="size-3.5" />
@@ -34,7 +36,7 @@ export function PresetBar() {
                 <div className="font-semibold leading-tight text-slate-200 group-hover:text-white">{p.name || p.label}</div>
                 <div className="font-mono text-xs text-brand-400">{formatRp(p.amount)}</div>
               </div>
-            </button>
+            </Button>
           )
         })}
         {presets.length === 0 && (

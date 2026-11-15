@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { CloudUpload } from 'lucide-react'
 import { Button } from '../ui/Button'
+import { Field } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { useFinance } from '../../hooks/useFinance'
 import { useToast } from '../../hooks/useToast'
@@ -30,12 +31,14 @@ export function ImportPanel() {
   }
 
   const mappingSelect = (label: string, option: string) => (
-    <div>
-      <label className="mb-1 block text-xs text-slate-400">{label}</label>
-      <select className="w-full rounded-lg border border-slate-800 bg-slate-950 px-2 py-1 text-xs text-slate-200">
-        <option>{option}</option>
-      </select>
-    </div>
+    <Field label={label}>
+      <Select
+        value={option}
+        onValueChange={() => {}}
+        options={[{ value: option, label: option }]}
+        className="py-1"
+      />
+    </Field>
   )
 
   return (
@@ -46,17 +49,17 @@ export function ImportPanel() {
       </div>
 
       <input ref={fileRef} type="file" accept=".csv,.xlsx" className="hidden" onChange={onPick} />
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={() => fileRef.current?.click()}
-        className="w-full rounded-2xl border-2 border-dashed border-slate-700 bg-slate-900/40 p-8 text-center transition hover:border-brand-500"
+        className="w-full flex-col rounded-2xl border-2 border-dashed border-slate-700 bg-slate-900/40 p-8 text-center hover:border-brand-500 active:scale-[0.99]"
       >
-        <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-brand-500/10 text-brand-400">
+        <div className="mx-auto mb-1 flex size-12 items-center justify-center rounded-full bg-brand-500/10 text-brand-400">
           <CloudUpload className="size-6" />
         </div>
         <h4 className="text-sm font-semibold text-slate-200">Klik untuk memilih file CSV / Excel</h4>
-        <p className="mt-1 text-xs text-slate-500">atau drag & drop file mutasi bank (.csv, .xlsx)</p>
-      </button>
+        <p className="text-xs font-normal text-slate-500">atau drag & drop file mutasi bank (.csv, .xlsx)</p>
+      </Button>
 
       {mapping && (
         <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-4 text-xs">
@@ -68,10 +71,9 @@ export function ImportPanel() {
             {mappingSelect('Kolom Tanggal', 'Kolom A (Date)')}
             {mappingSelect('Kolom Deskripsi', 'Kolom B (Desc)')}
             {mappingSelect('Kolom Nominal', 'Kolom C (Amount)')}
-            <div>
-              <label className="mb-1 block text-slate-400">Target Akun</label>
+            <Field label="Target Akun">
               <Select value={target} onValueChange={setTarget} options={accounts.map((a) => ({ value: a.id, label: a.name }))} className="py-1" />
-            </div>
+            </Field>
           </div>
           <Button variant="success" size="lg" onClick={runImport}>
             Proses & Import Ke Catatan Transaksi

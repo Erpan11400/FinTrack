@@ -100,9 +100,10 @@ function TransactionForm({
       <Field label="Tipe Arus Kas">
         <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-800 bg-slate-900 p-1">
           {TYPES.map((t) => (
-            <button
+            <Button
               key={t.value}
-              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setType(t.value)
                 if (t.value !== type) {
@@ -110,22 +111,19 @@ function TransactionForm({
                 }
               }}
               className={cn(
-                'rounded-lg py-2 font-semibold transition',
+                'rounded-lg py-2 font-semibold',
                 type === t.value
-                  ? 'border border-brand-500/30 bg-brand-500/10 text-brand-400'
-                  : 'text-slate-400',
+                  ? 'border border-brand-500/30 bg-brand-500/10 text-brand-400 hover:text-brand-300'
+                  : 'text-slate-400 hover:text-slate-200',
               )}
             >
               {t.label}
-            </button>
+            </Button>
           ))}
         </div>
       </Field>
 
-      <div>
-        <label htmlFor="tx-nominal-math" className="mb-1 block font-semibold text-slate-300">
-          Nominal Transaksi (Mendukung Evaluasi Matematika)
-        </label>
+      <Field label="Nominal Transaksi (Mendukung Evaluasi Matematika)" htmlFor="tx-nominal-math">
         <Input
           id="tx-nominal-math"
           required
@@ -165,7 +163,7 @@ function TransactionForm({
           Dukung operator: <code className="text-brand-300">+ - * / ( )</code>. Contoh:{' '}
           <code className="text-slate-400">125000 - 15000</code>
         </p>
-      </div>
+      </Field>
 
       {type !== 'transfer' ? (
         <>

@@ -98,9 +98,10 @@ function PresetForm({ preset, onClose }: { preset?: Preset | null; onClose: () =
         <Field label="Tipe Arus Kas">
           <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-800 bg-slate-900 p-1">
             {TYPES.map((t) => (
-              <button
+              <Button
                 key={t.value}
-                type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setType(t.value)
                   if (t.value !== type) {
@@ -108,14 +109,14 @@ function PresetForm({ preset, onClose }: { preset?: Preset | null; onClose: () =
                   }
                 }}
                 className={cn(
-                  'rounded-lg py-2 font-semibold transition',
+                  'rounded-lg py-2 font-semibold',
                   type === t.value
-                    ? 'border border-brand-500/30 bg-brand-500/10 text-brand-400'
+                    ? 'border border-brand-500/30 bg-brand-500/10 text-brand-400 hover:text-brand-300'
                     : 'text-slate-400 hover:text-slate-200',
                 )}
               >
                 {t.label}
-              </button>
+              </Button>
             ))}
           </div>
         </Field>
@@ -130,10 +131,7 @@ function PresetForm({ preset, onClose }: { preset?: Preset | null; onClose: () =
           />
         </Field>
 
-        <div>
-          <label htmlFor="preset-nominal-math" className="mb-1 block font-semibold text-slate-300">
-            Nominal Transaksi (Mendukung Evaluasi Matematika)
-          </label>
+        <Field label="Nominal Transaksi (Mendukung Evaluasi Matematika)" htmlFor="preset-nominal-math">
           <Input
             id="preset-nominal-math"
             required
@@ -169,7 +167,7 @@ function PresetForm({ preset, onClose }: { preset?: Preset | null; onClose: () =
               <span className="font-semibold">{result.valid ? '✓ Format Valid' : '✗ Syntax Error'}</span>
             </div>
           )}
-        </div>
+        </Field>
 
         {type !== 'transfer' ? (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -219,32 +217,32 @@ function PresetForm({ preset, onClose }: { preset?: Preset | null; onClose: () =
           />
         </Field>
 
-        <div>
-          <label className="mb-1.5 block font-semibold text-slate-300">Pilih Ikon Preset</label>
+        <Field label="Pilih Ikon Preset">
           <div className="grid grid-cols-6 gap-2 max-h-36 overflow-y-auto p-1.5 rounded-xl border border-slate-800/80 bg-slate-950/40">
             {AVAILABLE_PRESET_ICONS.map((item) => {
               const IconComp = getIcon(item.id)
               const isSelected = icon === item.id
               return (
-                <button
+                <Button
                   key={item.id}
-                  type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setIcon(item.id)}
                   className={cn(
-                    'flex flex-col items-center justify-center gap-1 rounded-xl border p-2 text-xs transition cursor-pointer',
+                    'flex-col gap-1 rounded-xl border p-2 text-xs cursor-pointer',
                     isSelected
-                      ? 'border-brand-500 bg-brand-500/20 text-brand-300 font-semibold shadow-sm'
+                      ? 'border-brand-500 bg-brand-500/20 text-brand-300 font-semibold shadow-sm hover:text-brand-200'
                       : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
                   )}
                   title={item.label}
                 >
                   <IconComp className="size-4" />
                   <span className="text-[10px] truncate max-w-full">{item.label}</span>
-                </button>
+                </Button>
               )
             })}
           </div>
-        </div>
+        </Field>
       </div>
 
       <div className="flex shrink-0 justify-end gap-2 pt-3 border-t border-slate-800 mt-2">

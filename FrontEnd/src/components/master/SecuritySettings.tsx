@@ -157,13 +157,14 @@ export function SecuritySettings() {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="pr-10"
               />
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowCurrent((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
               >
                 {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
+              </Button>
             </div>
           </Field>
 
@@ -178,13 +179,14 @@ export function SecuritySettings() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="pr-10"
               />
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowNew((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
               >
                 {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
+              </Button>
             </div>
           </Field>
 
@@ -199,13 +201,14 @@ export function SecuritySettings() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="pr-10"
               />
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowConfirm((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
               >
                 {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
+              </Button>
             </div>
           </Field>
 
@@ -247,32 +250,30 @@ export function SecuritySettings() {
         </div>
 
         <form onSubmit={handleSaveAutoLock} className="space-y-4">
-          <div>
-            <label className="mb-2 block text-xs font-semibold text-slate-300">
-              Pilih Durasi Standar:
-            </label>
+          <Field label="Pilih Durasi Standar:">
             <div className="grid grid-cols-3 gap-2">
               {PRESET_TIMEOUTS.map((preset) => {
                 const isSelected = customMinutes === '' && selectedMinutes === preset.value
                 return (
-                  <button
+                  <Button
                     key={preset.value}
-                    type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => {
                       setSelectedMinutes(preset.value)
                       setCustomMinutes('')
                     }}
-                    className={`rounded-xl border px-3 py-2 text-xs font-medium transition ${isSelected
-                        ? 'border-brand-500 bg-brand-600/20 text-brand-300 shadow-sm shadow-brand-500/20'
+                    className={`rounded-xl border px-3 py-2 text-xs font-medium ${isSelected
+                        ? 'border-brand-500 bg-brand-600/20 text-brand-300 shadow-sm shadow-brand-500/20 hover:text-brand-200'
                         : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
                       }`}
                   >
                     {preset.label}
-                  </button>
+                  </Button>
                 )
               })}
             </div>
-          </div>
+          </Field>
 
           <Field
             label="Atau Masukkan Waktu Kustom (dalam menit, 0 = nonaktif):"

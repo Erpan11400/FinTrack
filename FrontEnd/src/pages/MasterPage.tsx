@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Database, Download, FileSpreadsheet, Landmark, Pencil, Plus, RotateCcw, ShieldCheck, Tags, Trash2, Zap } from 'lucide-react'
+import { ArrowRight, Database, Download, FileSpreadsheet, Landmark, Pencil, Plus, RotateCcw, ShieldCheck, Tag, Tags, Trash2, Wallet, Zap } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs'
 import { AccountModal } from '../components/master/AccountModal'
@@ -13,7 +13,7 @@ import { cn, formatRp } from '../lib/utils'
 import type { Account, Category, Preset } from '../types'
 
 export default function MasterPage() {
-  const { categories, accounts, presets, balances, exportJSON, resetToDemo, updateCategory, updateAccount, deletePreset } = useFinance()
+  const { categories, accounts, presets, exportJSON, resetToDemo, updateCategory, updateAccount, deletePreset } = useFinance()
   const [catOpen, setCatOpen] = useState(false)
   const [accOpen, setAccOpen] = useState(false)
   const [presetOpen, setPresetOpen] = useState(false)
@@ -57,38 +57,40 @@ export default function MasterPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="size-3 rounded-full" style={{ backgroundColor: c.color }} />
+                    <span className="size-3 shrink-0 rounded-full" style={{ backgroundColor: c.color || '#6366f1' }} />
                     <span className={cn('font-bold', !isActive ? 'text-slate-400 line-through' : 'text-slate-100')}>
                       {c.name}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => updateCategory({ ...c, active: !isActive })}
                       className={cn(
-                        'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium transition cursor-pointer border',
+                        'gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium cursor-pointer border',
                         isActive
-                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25'
-                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700/50'
+                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25 hover:text-emerald-300'
+                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700/50 hover:text-slate-300'
                       )}
                       title={isActive ? 'Klik untuk non-aktifkan kategori' : 'Klik untuk aktifkan kategori'}
                     >
                       <span className={cn('size-1.5 rounded-full', isActive ? 'bg-emerald-400' : 'bg-slate-500')} />
                       {isActive ? 'Aktif' : 'Non-aktif'}
-                    </button>
+                    </Button>
                     <span className={cn('rounded px-2 py-0.5 text-xs font-medium', c.type === 'pemasukan' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400')}>
                       {c.type}
                     </span>
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setEditingCategory(c)}
-                      className="p-1 text-slate-500 hover:text-brand-400 transition"
+                      className="text-slate-500 hover:text-brand-400"
                       title="Edit Kategori"
                       aria-label="Edit Kategori"
                     >
                       <Pencil className="size-3.5" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -109,9 +111,10 @@ export default function MasterPage() {
           {accounts.map((a) => {
             const Icon = getIcon(a.icon)
             return (
-              <div key={a.id} className={cn('glass-panel space-y-3 rounded-xl p-4 text-xs transition-opacity', !a.active && 'opacity-60 bg-slate-900/40')}>
+              <div key={a.id} className={cn('glass-panel rounded-xl p-4 text-xs transition-opacity', !a.active && 'opacity-60 bg-slate-900/40')}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
+                    <span className="size-3 shrink-0 rounded-full" style={{ backgroundColor: a.color || '#6366f1' }} />
                     <Icon className="size-5 text-brand-400" />
                     <div>
                       <h4 className={cn('font-bold', !a.active ? 'text-slate-400 line-through' : 'text-slate-200')}>{a.name}</h4>
@@ -119,34 +122,32 @@ export default function MasterPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => updateAccount({ ...a, active: !a.active })}
                       className={cn(
-                        'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium transition cursor-pointer border',
+                        'gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium cursor-pointer border',
                         a.active
-                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25'
-                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700/50'
+                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25 hover:text-emerald-300'
+                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700/50 hover:text-slate-300'
                       )}
                       title={a.active ? 'Klik untuk non-aktifkan akun' : 'Klik untuk aktifkan akun'}
                     >
                       <span className={cn('size-1.5 rounded-full', a.active ? 'bg-emerald-400' : 'bg-slate-500')} />
                       {a.active ? 'Aktif' : 'Non-aktif'}
-                    </button>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setEditingAccount(a)}
-                      className="p-1 text-slate-500 hover:text-brand-400 transition"
+                      className="text-slate-500 hover:text-brand-400"
                       title="Edit Akun"
                       aria-label="Edit Akun"
                     >
                       <Pencil className="size-3.5" />
-                    </button>
+                    </Button>
                   </div>
-                </div>
-                <div className="flex items-center justify-between border-t border-slate-800/80 pt-2 font-mono">
-                  <span className="text-slate-400">Saldo Saat Ini:</span>
-                  <strong className="text-white">{formatRp(balances[a.id] || 0)}</strong>
                 </div>
               </div>
             )
@@ -171,92 +172,107 @@ export default function MasterPage() {
             const toAcc = accounts.find((a) => a.id === p.toAccountId)
             const cat = categories.find((c) => c.id === p.categoryId)
             const presetTitle = p.name || p.label || 'Preset'
+            const isTransfer = p.type === 'transfer'
+
             return (
-              <div key={p.id} className="glass-panel space-y-3 rounded-xl p-4 text-xs">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-500/10 text-brand-400">
-                      <Icon className="size-4" />
+              <div
+                key={p.id}
+                className={cn(
+                  'relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 p-4 pl-5 transition hover:border-slate-700',
+                  'before:absolute before:inset-y-0 before:left-0 before:w-1',
+                  p.type === 'pemasukan'
+                    ? 'before:bg-emerald-500'
+                    : isTransfer
+                      ? 'before:bg-sky-500'
+                      : 'before:bg-rose-500',
+                )}
+              >
+                <div>
+                  {/* Bagian Atas */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 truncate">
+                      <Icon className="size-4 shrink-0 text-brand-400" />
+                      <h4 className="truncate text-sm font-bold text-white">{presetTitle}</h4>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-slate-100">{presetTitle}</h4>
-                      <div className="mt-0.5 font-mono text-sm font-bold text-brand-400">
-                        {formatRp(p.amount)}
-                      </div>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setEditingPreset(p)
+                          setPresetOpen(true)
+                        }}
+                        className="text-slate-500 hover:text-brand-400"
+                        title="Edit Preset"
+                        aria-label="Edit Preset"
+                      >
+                        <Pencil className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          if (confirm(`Hapus preset "${presetTitle}"?`)) deletePreset(p.id)
+                        }}
+                        className="text-slate-500 hover:text-rose-400"
+                        title="Hapus Preset"
+                        aria-label="Hapus Preset"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span
-                      className={cn(
-                        'rounded px-2 py-0.5 text-[10px] font-medium capitalize',
-                        p.type === 'pemasukan'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : p.type === 'transfer'
-                            ? 'bg-sky-500/20 text-sky-400'
-                            : 'bg-rose-500/20 text-rose-400',
-                      )}
-                    >
+
+                  {/* Nominal & Tipe */}
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="font-mono text-base font-bold text-brand-400">
+                      {formatRp(p.amount)}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500">
                       {p.type}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingPreset(p)
-                        setPresetOpen(true)
-                      }}
-                      className="p-1 text-slate-500 hover:text-brand-400 transition"
-                      title="Edit Preset"
-                      aria-label="Edit Preset"
-                    >
-                      <Pencil className="size-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (confirm(`Hapus preset "${presetTitle}"?`)) {
-                          deletePreset(p.id)
-                        }
-                      }}
-                      className="p-1 text-slate-500 hover:text-rose-400 transition"
-                      title="Hapus Preset"
-                      aria-label="Hapus Preset"
-                    >
-                      <Trash2 className="size-3.5" />
-                    </button>
                   </div>
+
+                  {/* Catatan / Deskripsi */}
+                  {p.description && (
+                    <p className="mt-1.5 truncate text-[11px] text-slate-400">
+                      {p.description}
+                    </p>
+                  )}
                 </div>
 
-                <div className="rounded-lg border border-slate-800/80 bg-slate-900/40 p-2.5 text-[11px] text-slate-400 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span>Deskripsi:</span>
-                    <span className="text-slate-200 font-medium truncate max-w-[180px]">{p.description || '-'}</span>
+                <div>
+                  {/* Pemisah Struk */}
+                  <div className="my-3 border-t border-dashed border-slate-800" />
+
+                  {/* Footer Metadata Pills */}
+                  <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-300">
+                    {isTransfer ? (
+                      <p className="inline-flex items-center gap-1 rounded-md bg-slate-800/90 px-2 py-1">
+                        <Wallet className="size-3 text-sky-400" />
+                        {acc?.name ?? '-'} <ArrowRight className="size-2.5 text-slate-500" /> {toAcc?.name ?? '-'}
+                        <span className='text-xs text-yellow-500'>{p.fee ? ` (+${formatRp(p.fee)})` : ''}</span>
+                      </p>
+                    ) : (
+                      <>
+                        <span className="inline-flex items-center gap-1 rounded-md bg-slate-800/90 px-2 py-1">
+                          <Wallet className="size-3 text-slate-400" />
+                          {acc?.name ?? '-'}
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-md bg-slate-800/90 px-2 py-1">
+                          <Tag className="size-3 text-slate-400" />
+                          {cat?.name ?? 'Tanpa Kategori'}
+                        </span>
+                      </>
+                    )}
                   </div>
-                  {p.type === 'transfer' ? (
-                    <div className="flex items-center justify-between">
-                      <span>Rute Transfer:</span>
-                      <span className="text-slate-200 font-medium">
-                        {acc?.name ?? '-'} &rarr; {toAcc?.name ?? '-'}
-                        {p.fee ? ` (Biaya: ${formatRp(p.fee)})` : ''}
-                      </span>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <span>Akun Storage:</span>
-                        <span className="text-slate-200 font-medium">{acc?.name ?? '-'}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span>Kategori:</span>
-                        <span className="text-slate-200 font-medium">{cat?.name ?? 'Tanpa Kategori'}</span>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             )
           })}
+
           {presets.length === 0 && (
-            <div className="col-span-full py-8 text-center text-slate-500 text-xs">
+            <div className="col-span-full py-8 text-center text-xs text-slate-500">
               Belum ada preset transaksi. Klik "Tambah Preset Baru" untuk membuat shortcut.
             </div>
           )}
