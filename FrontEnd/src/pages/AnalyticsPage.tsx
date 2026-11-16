@@ -1,25 +1,34 @@
 import { Bar } from 'react-chartjs-2'
-import { Crown, Flame, PiggyBank } from 'lucide-react'
+import { Calendar, Crown, Flame, PiggyBank } from 'lucide-react'
 import '../lib/chart'
 import { useFinance } from '../hooks/useFinance'
 import { buildCategoryBreakdown, calculateTotals, findPeakSpendingDay } from '../lib/finance'
-import { formatRp } from '../lib/utils'
+import { formatRp, todayStr } from '../lib/utils'
 
 export default function AnalyticsPage() {
   const { transactions, categories } = useFinance()
-  const breakdown = buildCategoryBreakdown(transactions, categories)
+
+  const currentMonthPrefix = todayStr().slice(0, 7)
+  const currentMonthLabel = new Date().toLocaleDateString('id-ID', {
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const monthlyTransactions = transactions.filter((t) => t.date.startsWith(currentMonthPrefix))
+
+  const breakdown = buildCategoryBreakdown(monthlyTransactions, categories)
   const top5 = breakdown.slice(0, 5)
-  const { inflow, net } = calculateTotals(transactions)
+  const { inflow, net } = calculateTotals(monthlyTransactions)
   const savingsRate = inflow > 0 ? (net / inflow) * 100 : 0
-  const peak = findPeakSpendingDay(transactions)
+  const peak = findPeakSpendingDay(monthlyTransactions)
   const peakLabel = peak
     ? `${new Date(peak.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' })} · ${formatRp(peak.amount)}`
     : '-'
 
   const insights = [
-    { icon: Flame, tone: 'amber', title: 'Hari Pengeluaran Tertinggi', value: peakLabel, desc: 'Hari dengan lonjakan konsumsi terbesar', valueClass: 'text-white' },
-    { icon: Crown, tone: 'rose', title: 'Kategori Dominan', value: breakdown[0]?.name ?? '-', desc: 'Menyerap porsi anggaran terbanyak', valueClass: 'text-rose-300' },
-    { icon: PiggyBank, tone: 'emerald', title: 'Rasio Tabungan / Surplus', value: `${savingsRate.toFixed(1)}%`, desc: 'Persentase net cash flow dari pemasukan', valueClass: savingsRate >= 0 ? 'text-emerald-400' : 'text-rose-400' },
+    { icon: Flame, tone: 'amber', title: 'Hari Pengeluaran Tertinggi', value: peakLabel, desc: 'Hari dengan lonjakan konsumsi terbesar bulan ini', valueClass: 'text-white' },
+    { icon: Crown, tone: 'rose', title: 'Kategori Dominan', value: breakdown[0]?.name ?? '-', desc: 'Menyerap porsi anggaran terbanyak bulan ini', valueClass: 'text-rose-300' },
+    { icon: PiggyBank, tone: 'emerald', title: 'Rasio Tabungan / Surplus', value: `${savingsRate.toFixed(1)}%`, desc: 'Persentase net cash flow dari pemasukan bulan ini', valueClass: savingsRate >= 0 ? 'text-emerald-400' : 'text-rose-400' },
   ] as const
 
   const tones = {
@@ -30,9 +39,17 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="glass-panel rounded-2xl p-5">
-        <h2 className="text-xl font-bold text-white">Analisis Tren & Pola Konsumsi</h2>
-        <p className="mt-0.5 text-xs text-slate-400">Identifikasi kategori pengeluaran terbesar dan kebiasaan finansial</p>
+      <div className="glass-panel flex flex-col justify-between gap-3 rounded-2xl p-5 sm:flex-row sm:items-center">
+        <div>
+          <h2 className="text-xl font-bold text-white">Analisis Tren & Pola Konsumsi</h2>
+          <p className="mt-0.5 text-xs text-slate-400">
+            Identifikasi kategori pengeluaran terbesar dan kebiasaan finansial — analisis ini berlaku khusus untuk satu bulan yang sedang berjalan
+          </p>
+        </div>
+        <div className="inline-flex items-center gap-2 self-start rounded-xl border border-brand-500/30 bg-brand-500/10 px-3 py-1.5 text-xs font-medium text-brand-300 sm:self-auto">
+          <Calendar className="size-3.5 text-brand-400" />
+          <span>Bulan Berjalan: <strong className="font-semibold text-white">{currentMonthLabel}</strong></span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -88,7 +105,7 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             ))}
-            {breakdown.length === 0 && <p className="text-xs text-slate-500">Belum ada data pengeluaran.</p>}
+            {breakdown.length === 0 && <p className="text-xs text-slate-500">Belum ada data pengeluaran pada bulan berjalan ini.</p>}
           </div>
         </div>
       </div>
