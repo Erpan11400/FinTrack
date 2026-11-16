@@ -56,7 +56,7 @@ const transactionSchema = new mongoose.Schema(
 
 // --- Penyesuaian Index Optimal ---
 // 1. Query mutasi umum berdasarkan rentang tanggal (Dashboard Cash Flow / Log Transaksi)
-transactionSchema.index({ date: -1 });
+transactionSchema.index({ date: -1, createdAt: -1 });
 
 // 2. Ledger Buku Kas per Akun (Filter akun asal & tujuan)
 transactionSchema.index({ account_id: 1, date: -1 });

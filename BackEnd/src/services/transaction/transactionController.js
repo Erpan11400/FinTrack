@@ -1,5 +1,6 @@
 import {
   createTransaction,
+  getLatestTransactions,
   createTransactionFromPreset,
   getTransactionsByAccountId,
   updateTransactionById,
@@ -38,6 +39,16 @@ const createTransactionHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+const getAllTransactionHandler = async (_, res, next) => {
+  try {
+    const data = await getLatestTransactions();
+
+    return response(res, 200, 'Berhasil mendapatkan data transaksi', data);
+  } catch (error) {
+    next(error);
+  }
+}
 
 const createTransactionFromPresetHandler = async (req, res, next) => {
   try {
@@ -105,6 +116,7 @@ const getTransactionByAccountIdHandler = async (req, res, next) => {
 
 export {
   createTransactionHandler,
+  getAllTransactionHandler,
   createTransactionFromPresetHandler,
   updateTransactionHandler,
   deleteTransactionHandler,

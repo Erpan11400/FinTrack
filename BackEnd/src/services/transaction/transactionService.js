@@ -152,6 +152,35 @@ const createTransaction = async ({
 };
 
 /**
+ * Service to get latest 7 transactions
+ * @returns {Promise<Array<Object>>}
+ */
+const getLatestTransactions = async () => {
+  const transactions = await Transaction.find()
+    .sort({ date: -1, createdAt: -1 })
+    .limit(7)
+    .populate('account_id', 'name')
+    .populate('category_id', 'name')
+    .lean();
+
+  return transactions.map((t) => {
+    const dateStr = t.date instanceof Date
+      ? t.date.toISOString().slice(0, 10)
+      : String(t.date || '').slice(0, 10);
+
+    return {
+      id: t._id.toString(),
+      type: t.type,
+      amount: t.type === 'transfer' ? t.amount + (t.admin_fee || 0) : t.amount,
+      accountName: t.account_id?.name || null,
+      categoryName: t.category_id?.name || null,
+      desc: t.note || '',
+      date: dateStr,
+    };
+  });
+};
+
+/**
  * Service to get transactions by account id with running balance & summary
  * @param {string} accountId
  * @returns {Promise<Object>}
@@ -460,6 +489,7 @@ const deleteTransactionById = async (id) => {
 
 export {
   createTransaction,
+  getLatestTransactions,
   createTransactionFromPreset,
   getTransactionsByAccountId,
   updateTransactionById,
